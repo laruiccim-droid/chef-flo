@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chef flo 🎵</title>
+  <link href="https://fonts.googleapis.com/css2?family=Paytone+One&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --c1: #FF6B6B;
+      --c2: #FFD93D;
+      --c3: #6BCB77;
+      --c4: #4D96FF;
+      --c5: #FF922B;
+      --bg: #0f0f1a;
+      --card: #1a1a2e;
+      --text: #ffffff;
+      --muted: rgba(255,255,255,0.55);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Nunito', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 16px 60px;
+      overflow-x: hidden;
+    }
+
+    /* ---- CONFETTI HEADER ---- */
+    header {
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+      padding-top: 52px;
+      position: relative;
+    }
+
+    .confetti-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      font-size: 1.8rem;
+      margin-bottom: 18px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--c1), var(--c5));
+      color: #fff;
+      font-family: 'Paytone One', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 99px;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      font-family: 'Paytone One', sans-serif;
+      font-size: clamp(2.6rem, 10vw, 4rem);
+      line-height: 1.05;
+      background: linear-gradient(90deg, var(--c2), var(--c1), var(--c4));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 42px;
+    }
+
+    /* ---- VERSION LABEL ---- */
+    .version-label {
+      font-family: 'Paytone One', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      opacity: 0.5;
+    }
+
+    /* ---- CARDS ---- */
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      width: 100%;
+      max-width: 520px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1.5px solid rgba(255,255,255,0.06);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+      transition: transform 0.2s;
+    }
+
+    .card:hover { transform: translateY(-3px); }
+
+    .card-cover {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+      filter: brightness(0.9);
+    }
+
+    .card-body {
+      padding: 22px 22px 26px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .card-thumb {
+      width: 54px;
+      height: 54px;
+      border-radius: 10px;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 2px solid rgba(255,255,255,0.1);
+    }
+
+    .card-meta h2 {
+      font-family: 'Paytone One', sans-serif;
+      font-size: 1.25rem;
+      line-height: 1.2;
+    }
+
+    .card-meta span {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    /* version accent strips */
+    .card:nth-child(1) .card-meta h2 { color: var(--c2); }
+    .card:nth-child(2) .card-meta h2 { color: var(--c4); }
+
+    /* ---- WAVEFORM / PLAYER ---- */
+    .player-wrap {
+      background: rgba(255,255,255,0.04);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+    }
+
+    .waveform {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      height: 36px;
+      margin-bottom: 10px;
+    }
+
+    .bar {
+      flex: 1;
+      border-radius: 3px;
+      transition: background 0.3s;
+    }
+
+    .card:nth-child(1) .bar.active { background: var(--c2); }
+    .card:nth-child(2) .bar.active { background: var(--c4); }
+    .bar.inactive { background: rgba(255,255,255,0.12); }
+
+    .progress-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .progress-bar {
+      flex: 1;
+      height: 4px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 99px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 99px;
+      width: 0%;
+      transition: width 0.25s linear;
+    }
+
+    .card:nth-child(1) .progress-fill { background: var(--c2); }
+    .card:nth-child(2) .progress-fill { background: var(--c4); }
+
+    .time {
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-weight: 600;
+      white-space: nowrap;
+      min-width: 70px;
+      text-align: right;
+    }
+
+    /* ---- BUTTONS ---- */
+    .btn-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 12px 10px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 800;
+      transition: transform 0.15s, opacity 0.15s;
+      text-decoration: none;
+    }
+
+    .btn:hover { transform: scale(1.04); opacity: 0.9; }
+    .btn:active { transform: scale(0.97); }
+
+    .btn-play {
+      background: linear-gradient(135deg, var(--c1), var(--c5));
+      color: #fff;
+      font-size: 0.9rem;
+    }
+
+    .btn-download {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      border: 1.5px solid rgba(255,255,255,0.12);
+    }
+
+    .btn-share {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      border: 1.5px solid rgba(255,255,255,0.12);
+    }
+
+    .card:nth-child(1) .btn-play { background: linear-gradient(135deg, var(--c2), var(--c5)); color: #111; }
+    .card:nth-child(2) .btn-play { background: linear-gradient(135deg, var(--c4), #6B3FA0); color: #fff; }
+
+    /* ---- TOAST ---- */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #fff;
+      color: #111;
+      font-weight: 800;
+      font-size: 0.9rem;
+      padding: 12px 24px;
+      border-radius: 99px;
+      box-shadow: 0 6px 30px rgba(0,0,0,0.3);
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      z-index: 999;
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ---- FOOTER ---- */
+    footer {
+      margin-top: 48px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    footer span { font-size: 1rem; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="confetti-row">🎂 🎉 🎸 🎵 🎊</div>
+  <div class="badge">🎁 Un cadeau rien que pour toi</div>
+  <h1>Chef flo</h1>
+  <p class="subtitle">Une musique créée spécialement pour toi — par Mathieu</p>
+</header>
+
+<div class="cards">
+
+  <!-- VERSION 1 -->
+  <div class="card" id="card-1">
+    <div class="card-body">
+      <div class="card-header">
+        <img class="card-thumb" src="https://cdn2.suno.ai/image_large_c2d7c6f1-2a7a-4616-9c9c-6731ee9e9938.jpeg" alt="Chef flo v1" />
+        <div class="card-meta">
+          <h2>Chef flo</h2>
+          <span>Version 1 · Mathieu</span>
+        </div>
+      </div>
+
+      <div class="player-wrap">
+        <div class="waveform" id="waveform-1"></div>
+        <div class="progress-row">
+          <div class="progress-bar" id="progress-1" onclick="seek(event, 1)">
+            <div class="progress-fill" id="fill-1"></div>
+          </div>
+          <div class="time" id="time-1">0:00 / 0:00</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-play" id="playbtn-1" onclick="togglePlay(1)">
+          <span id="playicon-1">▶</span> Écouter
+        </button>
+        <a class="btn btn-download" href="https://drive.google.com/uc?export=download&id=1UArSiIJZQcO3uK9MNftYX83xwOK_Kb66" target="_blank" rel="noopener" download="Chef-flo-v1.mp3">
+          ↓ Télécharger
+        </a>
+        <button class="btn btn-share" onclick="shareTrack(1)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Partager
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- VERSION 2 -->
+  <div class="card" id="card-2">
+    <div class="card-body">
+      <div class="card-header">
+        <img class="card-thumb" src="https://cdn2.suno.ai/image_large_b76051f5-9863-4b33-9ce9-e057fea18ea7.jpeg" alt="Chef flo v2" />
+        <div class="card-meta">
+          <h2>Chef flo</h2>
+          <span>Version 2 · Mathieu</span>
+        </div>
+      </div>
+
+      <div class="player-wrap">
+        <div class="waveform" id="waveform-2"></div>
+        <div class="progress-row">
+          <div class="progress-bar" id="progress-2" onclick="seek(event, 2)">
+            <div class="progress-fill" id="fill-2"></div>
+          </div>
+          <div class="time" id="time-2">0:00 / 0:00</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-play" id="playbtn-2" onclick="togglePlay(2)">
+          <span id="playicon-2">▶</span> Écouter
+        </button>
+        <a class="btn btn-download" href="https://drive.google.com/uc?export=download&id=1yCueYnXKKfHX_nzGTyI4FaR7rFwiVj-W" target="_blank" rel="noopener" download="Chef-flo-v2.mp3">
+          ↓ Télécharger
+        </a>
+        <button class="btn btn-share" onclick="shareTrack(2)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Partager
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span>🎵</span><br/>
+  Fait avec ❤️ par Mathieu
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<audio id="audio-1" src="https://drive.google.com/uc?export=download&id=1UArSiIJZQcO3uK9MNftYX83xwOK_Kb66" preload="metadata" crossorigin="anonymous"></audio>
+<audio id="audio-2" src="https://drive.google.com/uc?export=download&id=1yCueYnXKKfHX_nzGTyI4FaR7rFwiVj-W" preload="metadata" crossorigin="anonymous"></audio>
+
+<script>
+  const urls = {
+    1: 'https://suno.com/song/c2d7c6f1-2a7a-4616-9c9c-6731ee9e9938',
+    2: 'https://suno.com/song/b76051f5-9863-4b33-9ce9-e057fea18ea7'
+  };
+
+  const audios = { 1: document.getElementById('audio-1'), 2: document.getElementById('audio-2') };
+  let playing = null;
+
+  // Build waveforms
+  [1, 2].forEach(n => {
+    const wf = document.getElementById('waveform-' + n);
+    const bars = 40;
+    for (let i = 0; i < bars; i++) {
+      const b = document.createElement('div');
+      b.className = 'bar inactive';
+      const h = 20 + Math.random() * 80;
+      b.style.height = h + '%';
+      b.id = `bar-${n}-${i}`;
+      wf.appendChild(b);
+    }
+  });
+
+  function updateWave(n, pct) {
+    const bars = 40;
+    const active = Math.floor(pct * bars);
+    for (let i = 0; i < bars; i++) {
+      const b = document.getElementById(`bar-${n}-${i}`);
+      b.className = 'bar ' + (i < active ? 'active' : 'inactive');
+    }
+  }
+
+  function fmt(s) {
+    if (isNaN(s)) return '0:00';
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60).toString().padStart(2, '0');
+    return `${m}:${sec}`;
+  }
+
+  [1, 2].forEach(n => {
+    const a = audios[n];
+    a.addEventListener('timeupdate', () => {
+      const pct = a.duration ? a.currentTime / a.duration : 0;
+      document.getElementById('fill-' + n).style.width = (pct * 100) + '%';
+      document.getElementById('time-' + n).textContent = fmt(a.currentTime) + ' / ' + fmt(a.duration);
+      updateWave(n, pct);
+    });
+    a.addEventListener('ended', () => {
+      document.getElementById('playicon-' + n).textContent = '▶';
+      playing = null;
+    });
+  });
+
+  function togglePlay(n) {
+    if (playing && playing !== n) {
+      audios[playing].pause();
+      document.getElementById('playicon-' + playing).textContent = '▶';
+    }
+    if (audios[n].paused) {
+      audios[n].play();
+      document.getElementById('playicon-' + n).textContent = '⏸';
+      playing = n;
+    } else {
+      audios[n].pause();
+      document.getElementById('playicon-' + n).textContent = '▶';
+      playing = null;
+    }
+  }
+
+  function seek(e, n) {
+    const bar = document.getElementById('progress-' + n);
+    const rect = bar.getBoundingClientRect();
+    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    if (audios[n].duration) audios[n].currentTime = pct * audios[n].duration;
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  async function shareTrack(n) {
+    const url = urls[n];
+    const data = { title: `Chef flo — Version ${n}`, text: 'Écoute cette musique créée spécialement pour toi 🎵', url };
+    if (navigator.share) {
+      try { await navigator.share(data); } catch (e) { /* annulé */ }
+    } else {
+      await navigator.clipboard.writeText(url);
+      showToast('✅ Lien copié !');
+    }
+  }
+</script>
+</body>
+</html>
